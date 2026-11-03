@@ -1,58 +1,80 @@
-# Student Registration Application — Docker & AWS EC2 Deployment
+# Student Registration Application — Docker on AWS EC2
+
+![Docker on AWS EC2 Architecture](docs/images/docker-aws-architecture.png)
 
 ## 📌 Project Overview
 
-This project is a full-stack Student Registration Application built using React, Spring Boot, and MariaDB. The application is containerized using Docker and deployed on an AWS EC2 Ubuntu server.
+The Student Registration Application is a full-stack web application developed using React.js, Spring Boot, and MariaDB.
 
-The project demonstrates application containerization, Docker image creation, container networking, AWS EC2 deployment, and GitHub version control using SSH authentication.
+The application was containerized using Docker and deployed on an AWS EC2 Ubuntu server. Each component runs inside its own Docker container, making the application modular, portable, and easier to manage.
+
+This project demonstrates practical experience with Docker, AWS EC2, Linux, containerization, backend API deployment, database connectivity, and GitHub version control using SSH.
 
 ## 🛠️ Technology Stack
 
 | Technology | Purpose |
 |---|---|
-| React.js | Frontend user interface |
+| React.js | Frontend development |
 | Vite | Frontend build tool |
-| Java | Backend programming language |
+| Java | Backend programming |
 | Spring Boot | REST API development |
 | MariaDB | Relational database |
 | Docker | Application containerization |
-| AWS EC2 | Cloud server hosting |
-| Ubuntu | EC2 operating system |
+| Docker Images | Packaging application components |
+| Docker Containers | Running application services |
+| AWS EC2 | Cloud deployment |
+| Ubuntu Linux | EC2 operating system |
 | Git | Version control |
 | GitHub | Source code repository |
 | SSH / ED25519 | Secure GitHub authentication |
 
 ## 🏗️ Application Architecture
 
+The application consists of three Docker containers deployed on an AWS EC2 Ubuntu server.
+
 ```text
-                    User / Browser
-                          |
-                          v
-                AWS EC2 Ubuntu Server
-                   Public IP Address
-                          |
-                          v
-                React Frontend (Docker)
-                     Port 80
-                          |
-                          v
-              Spring Boot Backend (Docker)
-                     Port 8080
-                          |
-                          v
-                 MariaDB (Docker)
-                     Port 3306
+                       USERS
+                         |
+                         v
+                    INTERNET
+                         |
+                         v
+                AWS EC2 - UBUNTU
+                Public IP: EC2 IP
+                         |
+                 Docker Containers
+                         |
+         +---------------+---------------+
+         |               |               |
+         v               v               v
+   FRONTEND           BACKEND          DATABASE
+   React + Vite     Spring Boot        MariaDB
+   Port: 80         Port: 8080         Port: 3306
+         |               |               |
+         +-------------->+-------------->+
+             API Requests   DB Connection
 ```
 
 ### Docker Containers
 
-| Container Name | Docker Image | Port |
+| Container Name | Image Name | Port |
 |---|---|---|
 | student-frontend | student-frontend:latest | 80 |
 | student-backend | student-backend:latest | 8080 |
 | student-db | student-db:latest | 3306 |
 
-Each application layer runs in its own Docker container.
+## ✨ Project Features
+
+- Student registration functionality
+- View registered students
+- Full-stack React and Spring Boot integration
+- REST API implementation
+- MariaDB database integration
+- Dockerized frontend, backend, and database
+- Custom Docker image creation
+- AWS EC2 cloud deployment
+- GitHub source code management
+- SSH-based GitHub authentication
 
 ## 📂 Project Structure
 
@@ -63,8 +85,8 @@ student-registration-aws/
 │   ├── src/
 │   ├── public/
 │   ├── Dockerfile
-│   ├── .env
-│   └── package.json
+│   ├── package.json
+│   └── .env
 │
 ├── backend/
 │   ├── src/
@@ -76,38 +98,28 @@ student-registration-aws/
 ├── database/
 │   └── Dockerfile
 │
+├── docs/
+│   └── images/
+│       └── docker-aws-architecture.png
+│
 └── README.md
 ```
 
-*Note: The structure above represents the main application and Docker components. Adjust paths if the repository structure changes.*
+## ☁️ AWS EC2 Deployment
 
-## ☁️ AWS EC2 Setup
-
-### Step 1 — Launch an EC2 Instance
+### Step 1: Launch EC2 Instance
 
 1. Open the AWS Management Console.
 2. Navigate to EC2.
 3. Launch an Ubuntu instance.
-4. Configure the required instance type.
-5. Create or select a key pair.
+4. Select the required instance type.
+5. Configure the key pair.
 6. Configure the Security Group.
+7. Launch the instance.
 
-### Step 2 — Configure Security Group
+### Step 2: Connect to EC2
 
-The application uses the following ports:
-
-| Port | Service | Purpose |
-|---|---|---|
-| 22 | SSH | Remote server administration |
-| 80 | HTTP | Frontend access |
-| 8080 | Spring Boot | Backend API |
-| 3306 | MariaDB | Database |
-
-For better security, restrict SSH access to your own IP address. Database port 3306 should not be publicly accessible. Ideally, backend port 8080 should also be private and accessed through the frontend or a reverse proxy.
-
-### Step 3 — Connect to EC2
-
-Connect to the EC2 instance using SSH:
+Connect to the EC2 instance:
 
 ```bash
 ssh -i your-key.pem ubuntu@YOUR_EC2_PUBLIC_IP
@@ -120,50 +132,46 @@ sudo apt update
 sudo apt upgrade -y
 ```
 
-## 🐳 Docker Installation
+### Step 3: Install Docker
 
-Install Docker on Ubuntu:
+Install Docker and Git:
 
 ```bash
 sudo apt update
 sudo apt install -y docker.io git
 ```
 
-Enable and start Docker:
+Start Docker:
 
 ```bash
-sudo systemctl enable docker
 sudo systemctl start docker
+sudo systemctl enable docker
 ```
 
-Verify installation:
+Verify Docker installation:
 
 ```bash
 docker --version
 docker ps
 ```
 
-## 📥 Clone the GitHub Repository
+## 🐳 Docker Containerization
 
-Clone the project:
+### Step 1: Clone the Project
 
 ```bash
-git clone https://github.com/mukitshaikh/student-registration-aws.git
+git clone https://github.com/mukitshaikh/student-registration-docker-aws.git
 ```
 
-Navigate into the project:
+Navigate into the project directory:
 
 ```bash
 cd student-registration-aws
 ```
 
-## 🐳 Docker Image Creation
+### Step 2: Configure Frontend API URL
 
-Dockerfiles are used to containerize the frontend, backend, and database components.
-
-### Step 1 — Build Frontend Image
-
-Configure the frontend API URL in the frontend environment configuration.
+The frontend uses the backend API URL configured through Vite environment variables.
 
 Example:
 
@@ -171,102 +179,68 @@ Example:
 VITE_API_URL=http://YOUR_EC2_PUBLIC_IP:8080/api
 ```
 
+Replace `YOUR_EC2_PUBLIC_IP` with the public IP address of the EC2 instance.
+
+### Step 3: Build Docker Images
+
 Build the frontend image:
 
 ```bash
 docker build -t student-frontend:latest ./frontend
 ```
 
-### Step 2 — Build Backend Image
+Build the backend image:
 
 ```bash
 docker build -t student-backend:latest ./backend
 ```
 
-### Step 3 — Build Database Image
+Build the database image:
 
 ```bash
 docker build -t student-db:latest ./database
 ```
 
-### Step 4 — Verify Docker Images
+Verify the images:
 
 ```bash
 docker images
 ```
 
-The following images should be available:
+### Step 4: Run Docker Containers
 
-```text
-student-frontend
-student-backend
-student-db
-```
-
-## 🚀 Running the Docker Containers
-
-### Step 1 — Create a Docker Network
-
-A Docker network allows containers to communicate with each other.
-
-```bash
-docker network create student-network
-```
-
-### Step 2 — Start the Database Container
-
-```bash
-docker run -d \
-  --name student-db \
-  --network student-network \
-  -p 3306:3306 \
-  student-db:latest
-```
-
-Check the database container:
-
-```bash
-docker ps
-docker logs student-db
-```
-
-### Step 3 — Start the Backend Container
-
-```bash
-docker run -d \
-  --name student-backend \
-  --network student-network \
-  -p 8080:8080 \
-  student-backend:latest
-```
-
-Check backend logs:
-
-```bash
-docker logs student-backend
-```
-
-### Step 4 — Start the Frontend Container
+Start the frontend container:
 
 ```bash
 docker run -d \
   --name student-frontend \
-  --network student-network \
   -p 80:80 \
   student-frontend:latest
 ```
 
-Check frontend logs:
+Start the backend container:
 
 ```bash
-docker logs student-frontend
+docker run -d \
+  --name student-backend \
+  -p 8080:8080 \
+  student-backend:latest
 ```
 
-*Important: The commands above are a deployment reference. The database credentials, backend database hostname, and startup options must match the Dockerfiles and `application.properties` used in this project.*
+Start the database container:
+
+```bash
+docker run -d \
+  --name student-db \
+  -p 3306:3306 \
+  student-db:latest
+```
+
+> Note: These commands illustrate the container startup configuration. Database credentials, environment variables, and Docker networking must match the actual application configuration.
 
 ## 🌐 Application Access
 
-The frontend is accessible through the EC2 public IP:
+Frontend:
 
 ```text
 http://YOUR_EC2_PUBLIC_IP
@@ -278,18 +252,24 @@ Backend API:
 http://YOUR_EC2_PUBLIC_IP:8080/api/users
 ```
 
-Health endpoint:
+Backend Health Check:
 
 ```text
 http://YOUR_EC2_PUBLIC_IP:8080/api/health
 ```
 
-## 🧪 Application Testing
+## 🧪 Testing and Verification
 
 ### Check Running Containers
 
 ```bash
 docker ps
+```
+
+### Check All Containers
+
+```bash
+docker ps -a
 ```
 
 ### Test Backend API
@@ -312,87 +292,62 @@ docker logs student-backend
 docker logs student-db
 ```
 
-### Inspect Docker Network
-
-```bash
-docker network inspect student-network
-```
-
-## 🔧 Docker Management Commands
-
-### Stop Containers
-
-```bash
-docker stop student-frontend student-backend student-db
-```
-
-### Start Containers
-
-```bash
-docker start student-db student-backend student-frontend
-```
-
-### Remove Containers
-
-```bash
-docker rm -f student-frontend student-backend student-db
-```
-
-### Rebuild Images
-
-```bash
-docker build -t student-frontend:latest ./frontend
-docker build -t student-backend:latest ./backend
-docker build -t student-db:latest ./database
-```
-
 ### View Docker Images
 
 ```bash
 docker images
 ```
 
-### View All Containers
+## 🔄 Deployment Workflow
 
-```bash
-docker ps -a
+```text
+Developer
+   |
+   v
+Application Source Code
+   |
+   v
+GitHub Repository
+   |
+   v
+AWS EC2 Ubuntu Server
+   |
+   v
+Build Docker Images
+   |
+   v
+Run Docker Containers
+   |
+   +---- React Frontend
+   |
+   +---- Spring Boot Backend
+   |
+   +---- MariaDB Database
+   |
+   v
+Test Application
+   |
+   v
+Access Application Through EC2 Public IP
 ```
 
-## 🔐 GitHub Integration Using SSH
+## 🔐 GitHub SSH Configuration
 
-GitHub SSH authentication was configured on the EC2 server to push code without using a GitHub password or Personal Access Token.
+SSH authentication was configured on the EC2 server to securely push project code to GitHub.
 
-### Step 1 — Generate an ED25519 SSH Key
+### Generate SSH Key
 
 ```bash
 ssh-keygen -t ed25519 -C "mukitshaikh@github.com"
 ```
 
-The key pair was generated under:
-
-```text
-/root/.ssh/id_ed25519
-/root/.ssh/id_ed25519.pub
-```
-
-- `id_ed25519` — Private key. Never share it.
-- `id_ed25519.pub` — Public key. Add it to GitHub.
-
-### Step 2 — Display the Public Key
+### Display Public Key
 
 ```bash
 cat ~/.ssh/id_ed25519.pub
 ```
 
-### Step 3 — Add SSH Key to GitHub
-
-1. Open https://github.com/settings/ssh/new
-2. Enter the title: `EC2 Ubuntu Project`
-3. Select `Authentication Key`.
-4. Paste the public key.
-5. Click `Add SSH key`.
-
-### Step 4 — Test SSH Authentication
+### Test SSH Authentication
 
 ```bash
 ssh -T git@github.com
@@ -404,96 +359,81 @@ Successful output:
 Hi mukitshaikh! You've successfully authenticated, but GitHub does not provide shell access.
 ```
 
-### Step 5 — Configure Git Remote
+### Configure Git Remote
 
 ```bash
-git remote set-url origin git@github.com:mukitshaikh/student-registration-aws.git
+git remote set-url origin git@github.com:mukitshaikh/student-registration-docker-aws.git
 ```
 
-Verify the remote:
+Verify:
 
 ```bash
 git remote -v
 ```
 
-Expected output:
-
-```text
-origin  git@github.com:mukitshaikh/student-registration-aws.git (fetch)
-origin  git@github.com:mukitshaikh/student-registration-aws.git (push)
-```
-
-### Step 6 — Push Code to GitHub
+### Push Changes to GitHub
 
 ```bash
 git add .
-git commit -m "Update project documentation"
+git commit -m "Update project"
 git push origin main
 ```
 
-The project code is maintained in the following repository:
+## 🔧 Docker Management Commands
 
-https://github.com/mukitshaikh/student-registration-aws
+Stop containers:
 
-## 🔄 Application Deployment Workflow
+```bash
+docker stop student-frontend student-backend student-db
+```
 
-```text
-Developer
-   |
-   v
-Application Source Code
-   |
-   v
-Git / GitHub Repository
-   |
-   v
-AWS EC2 Ubuntu Server
-   |
-   v
-Docker Image Build
-   |
-   v
-Docker Containers
-   |
-   +---- Frontend (React / Vite)
-   |
-   +---- Backend (Spring Boot)
-   |
-   +---- Database (MariaDB)
-   |
-   v
-Application Testing
-   |
-   v
-Access Through EC2 Public IP
+Start containers:
+
+```bash
+docker start student-frontend student-backend student-db
+```
+
+Remove containers:
+
+```bash
+docker rm -f student-frontend student-backend student-db
+```
+
+Remove an image:
+
+```bash
+docker rmi student-frontend:latest
+```
+
+Inspect a container:
+
+```bash
+docker inspect student-backend
 ```
 
 ## 🔒 Security Best Practices
 
-- Never commit database passwords or other secrets to GitHub.
-- Do not share the SSH private key.
+- Never expose database port 3306 publicly.
 - Restrict SSH access to trusted IP addresses.
-- Do not expose the MariaDB port publicly.
-- Prefer using environment variables or AWS Secrets Manager for sensitive configuration.
+- Avoid exposing backend port 8080 directly in production.
+- Never commit database passwords or private keys to GitHub.
+- Store sensitive credentials using environment variables or AWS Secrets Manager.
 - Use HTTPS for production deployments.
-- Keep Docker images and the Ubuntu system updated.
-- Use a dedicated database user rather than a root account for the application.
+- Keep Docker images and the operating system updated.
 
 ## 📚 What I Learned
 
-Through this project, I gained practical experience in:
-
-- Deploying a full-stack application on AWS EC2.
-- Containerizing React, Spring Boot, and MariaDB applications.
-- Building custom Docker images using Dockerfiles.
-- Running and managing multiple Docker containers.
-- Configuring Docker networking.
-- Connecting frontend applications with backend REST APIs.
-- Connecting Spring Boot with MariaDB.
-- Troubleshooting application and container issues.
-- Using Git and GitHub for version control.
-- Configuring SSH authentication with GitHub.
-- Deploying applications on a cloud-based Ubuntu server.
+- Docker installation and configuration on Ubuntu Linux.
+- Building custom Docker images.
+- Running multiple containers for a full-stack application.
+- Containerizing React, Spring Boot, and MariaDB.
+- Deploying applications on AWS EC2.
+- Configuring frontend-to-backend API communication.
+- Database connectivity and application troubleshooting.
+- Linux server administration.
+- Git and GitHub version control.
+- SSH key-based authentication.
+- Cloud application deployment.
 
 ## 👨‍💻 Author
 
@@ -501,6 +441,8 @@ Through this project, I gained practical experience in:
 
 Cloud & DevOps Learner
 
-GitHub: https://github.com/mukitshaikh
+GitHub: [mukitshaikh](https://github.com/mukitshaikh)
 
-Repository: https://github.com/mukitshaikh/student-registration-aws
+## 🔗 Project Repository
+
+[student-registration-docker-aws](https://github.com/mukitshaikh/student-registration-docker-aws)
