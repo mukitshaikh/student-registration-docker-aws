@@ -1,6 +1,6 @@
 # Student Registration Application — Docker on AWS EC2
 
-![Docker on AWS EC2 Architecture](docs/images/docker-aws-architecture.png)
+![Docker on AWS EC2 Architecture](https://github.com/mukitshaikh/student-registration-docker-aws/blob/main/docs/images/Student%20Registration%20Docker%20AWS%20Architecture.png?raw=true)
 
 ## 📌 Project Overview
 
@@ -20,8 +20,6 @@ This project demonstrates practical experience with Docker, AWS EC2, Linux, cont
 | Spring Boot | REST API development |
 | MariaDB | Relational database |
 | Docker | Application containerization |
-| Docker Images | Packaging application components |
-| Docker Containers | Running application services |
 | AWS EC2 | Cloud deployment |
 | Ubuntu Linux | EC2 operating system |
 | Git | Version control |
@@ -100,7 +98,7 @@ student-registration-aws/
 │
 ├── docs/
 │   └── images/
-│       └── docker-aws-architecture.png
+│       └── Student Registration Docker AWS Architecture.png
 │
 └── README.md
 ```
@@ -119,8 +117,6 @@ student-registration-aws/
 
 ### Step 2: Connect to EC2
 
-Connect to the EC2 instance:
-
 ```bash
 ssh -i your-key.pem ubuntu@YOUR_EC2_PUBLIC_IP
 ```
@@ -133,8 +129,6 @@ sudo apt upgrade -y
 ```
 
 ### Step 3: Install Docker
-
-Install Docker and Git:
 
 ```bash
 sudo apt update
@@ -160,7 +154,7 @@ docker ps
 ### Step 1: Clone the Project
 
 ```bash
-git clone https://github.com/mukitshaikh/student-registration-docker-aws.git
+git clone git@github.com:mukitshaikh/student-registration-docker-aws.git
 ```
 
 Navigate into the project directory:
